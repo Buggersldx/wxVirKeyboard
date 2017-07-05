@@ -4,6 +4,8 @@
   position: absolute;
   width: 100%;
   height: 100%;
+  background: url(http://longmen-1251225286.costj.myqcloud.com/bg.png) top center;
+  background-size: 100% 100%;
 }
 
 .title {
@@ -110,6 +112,9 @@
 .board_bg {
   box-shadow: 0 0 0 #e5e5e5;
   background: #e5e5e5;
+}
+.board_bg_spec {
+  box-shadow: 0 0 0 #e5e5e5;
 }
 
 .parking {

@@ -11,9 +11,9 @@ Page({
     isKeyboard: false,//是否显示键盘
     specialBtn: false,
     tapNum: false,//数字键盘是否可以点击
-    parkingData: true,//是否展示剩余车位按钮
-    isFocus: false,//输入框聚焦
-    flag: false,//防止多次点击的阀门
+    parkingData:true,//是否展示剩余车位按钮
+    isFocus:false,//输入框聚焦
+    flag:false,//防止多次点击的阀门
     phoneNumber: '0379-60201137',
     keyboardNumber: '1234567890',
     keyboardAlph: 'QWERTYUIOPASDFGHJKL巛ZXCVBNM',
@@ -23,9 +23,9 @@ Page({
     keyboardValue: '',
     textArr: [],
     textValue: '',
-    placeholder: '点此输入车牌',
-    warnMessage: '提示：请确保您填写车牌号的正确性，以免后续误交费给您造成不必要的麻烦。',
-    telMessage: '该小程序目前仅适用于东北服务区停车场，给您造成的不便敬请谅解！'
+    placeholder:'点此输入车牌',
+    warnMessage:'提示：请确保您填写车牌号的正确性，以免后续误交费给您造成不必要的麻烦。',
+    telMessage:'该小程序目前仅适用于东北服务区停车场，给您造成的不便敬请谅解！'
   },
 
   /**
@@ -65,12 +65,12 @@ Page({
   /**
    * 输入框显示键盘状态
    */
-  showKeyboard: function () {
-    var self = this;
-    self.setData({
-      isFocus: true,
-      isKeyboard: true,
-    })
+  showKeyboard:function(){
+    var self =this;
+      self.setData({
+        isFocus: true,
+        isKeyboard: true,
+      })
   },
   /**
    * 点击页面隐藏键盘事件
@@ -188,17 +188,40 @@ Page({
             flag: false
           })
         } else {
-          self.setData({
-            flag: null
-          })
-          var msg = "未查询到" + self.data.textValue + "的车辆"
-          wx.showModal({
-            title: "温馨提示",
-            content: msg,
-            showCancel: false,
+          wx.request({
+            url: 'https://parkinglot.qqdayu.com/parking/get_charge_bill',
+            method: 'post',
+            data: {
+              plateNo: self.data.textValue
+            },
+            header: {
+              'content-type': 'application/x-www-form-urlencoded'
+            },
             success: function (res) {
-              if (res.confirm) {
+              var response = res.data.data;
+              if (res.data.errorCode == 0) {
+                //说明请求成功了,跳转到支付页面
+                wx.navigateTo({
+                  url: '../payment/payment?plateNo=' + response.plateNo + '&cost=' + response.cost + '&phoneNumber=' + self.data.phoneNumber
+                })
+              } else if (res.data.errorCode == 1) {
+                //说明不用支付
+                var msg = "未查询到" + self.data.textValue + "的车辆"
+                wx.showModal({
+                  title: msg,
+                  content: res.data.errorMessage,
+                  showCancel: false,
+                  success: function (res) {
+                    if (res.confirm) {
+                    }
+                  }
+                })
               }
+            },
+            complete: function () {
+              self.setData({
+                flag: null
+              })
             }
           })
         }
@@ -208,7 +231,7 @@ Page({
   /**
    * 点击查询剩余车位按钮
    */
-  qryParking: function () {
+  qryParking:function(){
     var self = this;
     wx.navigateTo({
       url: '../parking/parking'

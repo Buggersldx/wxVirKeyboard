@@ -11,9 +11,9 @@ Page({
     isKeyboard: false,//是否显示键盘
     specialBtn: false,
     tapNum: false,//数字键盘是否可以点击
-    parkingData:true,//是否展示剩余车位按钮
-    isFocus:false,//输入框聚焦
-    flag:false,//防止多次点击的阀门
+    parkingData: false,//是否展示剩余车位按钮
+    isFocus: false,//输入框聚焦
+    flag: false,//防止多次点击的阀门
     phoneNumber: '0379-60201137',
     keyboardNumber: '1234567890',
     keyboardAlph: 'QWERTYUIOPASDFGHJKL巛ZXCVBNM',
@@ -23,9 +23,9 @@ Page({
     keyboardValue: '',
     textArr: [],
     textValue: '',
-    placeholder:'点此输入车牌',
-    warnMessage:'提示：请确保您填写车牌号的正确性，以免后续误交费给您造成不必要的麻烦。',
-    telMessage:'该小程序目前仅适用于东北服务区停车场，给您造成的不便敬请谅解！'
+    placeholder: '输入或拍照录入车牌',
+    warnMessage: '提示：请确保您填写车牌号的正确性，以免后续误交费给您造成不必要的麻烦。',
+    telMessage: '该小程序目前仅适用于东北服务区停车场，给您造成的不便敬请谅解！'
   },
 
   /**
@@ -65,12 +65,12 @@ Page({
   /**
    * 输入框显示键盘状态
    */
-  showKeyboard:function(){
-    var self =this;
-      self.setData({
-        isFocus: true,
-        isKeyboard: true,
-      })
+  showKeyboard: function () {
+    var self = this;
+    self.setData({
+      isFocus: true,
+      isKeyboard: true,
+    })
   },
   /**
    * 点击页面隐藏键盘事件
@@ -79,10 +79,17 @@ Page({
     var self = this;
     if (self.data.isKeyboard) {
       //说明键盘是显示的，再次点击要隐藏键盘
-      self.setData({
-        isKeyboard: false,
-        isFocus: true,
-      })
+      if (self.data.textValue){
+        self.setData({
+          isKeyboard: false
+        })
+      }else{
+        self.setData({
+          isKeyboard: false,
+          isFocus: false
+        })
+      }
+      
     }
   },
   /**
@@ -206,7 +213,7 @@ Page({
                 })
               } else if (res.data.errorCode == 1) {
                 //说明不用支付
-                var msg = "未查询到" + self.data.textValue + "的车辆"
+                var msg = res.data.title
                 wx.showModal({
                   title: msg,
                   content: res.data.errorMessage,
@@ -231,7 +238,7 @@ Page({
   /**
    * 点击查询剩余车位按钮
    */
-  qryParking:function(){
+  qryParking: function () {
     var self = this;
     wx.navigateTo({
       url: '../parking/parking'
@@ -244,6 +251,94 @@ Page({
     var self = this;
     wx.makePhoneCall({
       phoneNumber: self.data.phoneNumber
+    })
+  },
+  /**
+   * 车牌号识别
+   */
+  PRbtn: function () {
+    var self = this;
+    wx.chooseImage({
+      count: 1, // 默认9
+      sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+      sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+      success: function (res) {
+        // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
+        var tempFilePaths = res.tempFilePaths
+        wx.showLoading({
+          title: '加载中',
+        })
+        wx.uploadFile({
+          url: 'https://parkinglot.qqdayu.com/verify/verify',
+          filePath: tempFilePaths[0],
+          name: 'upload_file',
+          formData: {},
+          success: function (res) {
+            //typeof copy === 'object'
+            wx.hideLoading()
+            var resData = res.data
+            console.log(resData)
+            if (typeof resData === 'string') {
+              resData = JSON.parse(resData)
+            } else {
+            }
+            if (resData.errorCode == 2) {
+              //说明车牌号识别失败
+              var msg = resData.title
+              wx.showModal({
+                title: msg,
+                content: resData.errorMessage,
+                showCancel: false,
+                success: function (res) {
+                  if (res.confirm) {
+                  }
+                }
+              })
+              return false
+            }
+            var txtArr = []
+            if (resData.errorCode == 0) {
+              //说明请求成功了,跳转到支付页面
+              txtArr = resData.plateNo.split('')
+              self.setData({
+                textArr: txtArr,
+                keyboardValue: self.data.keyboard2,
+                specialBtn: true,
+                tapNum: true,
+                textValue: resData.plateNo,
+                isFocus: true,
+                isKeyboard: true
+              })
+              wx.navigateTo({
+                url: '../payment/payment?plateNo=' + resData.plateNo + '&cost=' + resData.cost + '&phoneNumber=' + self.data.phoneNumber
+              })
+            } else if (resData.errorCode == 1) {
+              //说明不用支付
+              console.log(resData.plateNo)
+              txtArr = resData.plateNo.split('')
+              self.setData({
+                textArr: txtArr,
+                keyboardValue: self.data.keyboard2,
+                specialBtn: true,
+                tapNum: true,
+                textValue: resData.plateNo,
+                isFocus: true,
+                isKeyboard: true
+              })
+              var msg = resData.title
+              wx.showModal({
+                title: msg,
+                content: resData.errorMessage,
+                showCancel: false,
+                success: function (res) {
+                  if (res.confirm) {
+                  }
+                }
+              })
+            }
+          }
+        })
+      }
     })
   },
   /**

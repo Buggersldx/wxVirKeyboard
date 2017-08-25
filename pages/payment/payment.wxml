@@ -39,7 +39,7 @@
   </view>
   <!--支付按钮-->
   <view class="pay_money" bindtap="recharge">
-    <image src="http://longmen-1251225286.costj.myqcloud.com/pay_btn.png" mode="aspectFit" class="pay_icon"></image>
+    <image src="/images/pay_btn.png" mode="aspectFit" class="pay_icon"></image>
   </view>
 
 </view>

@@ -4,7 +4,6 @@
     <image src="http://longmen-1251225286.costj.myqcloud.com/parking_tittle.png" mode="aspectFit" class="title-img"></image>
   </view>
 
-
   <!--输入框默认样式-->
   <block wx:if="{{!isFocus}}">
     <view class="text text_con" bindtap="showKeyboard">
@@ -12,6 +11,7 @@
       <text class="placeholder">{{placeholder}}</text>
     </view>
   </block>
+
   <!--输入框打开键盘样式-->
   <block wx:else="{{isFocus}}">
     <view class="text text_con_focus" bindtap="bindFocus" >
@@ -20,6 +20,10 @@
     </view>
   </block>
 
+
+  <!--拍照识别  -->
+   <image src="../../images/icon_photo.png" mode="aspectFit" class="photo_icon" bindtap="PRbtn"></image>
+   
   <!--键盘-->
   <block wx:if="{{isKeyboard}}">
     <view class="keyboard">

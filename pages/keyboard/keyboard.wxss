@@ -50,6 +50,16 @@
   height: 50rpx;
   margin: 0 20rpx;
 }
+
+.photo_icon{
+  position: absolute;
+  top:400rpx;
+  right: 50rpx;
+  width: 50rpx;
+  height: 50rpx;
+  margin: 0 20rpx;
+}
+
 .del_icon {
   width: 100%;
   height: 100%;

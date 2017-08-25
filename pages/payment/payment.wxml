@@ -32,7 +32,7 @@
     <!--底部客服电话-->
     <view class="tel">{{telMessage}}</view>
     <view class="tel">
-      <image src="http://longmen-1251225286.costj.myqcloud.com/icon_phone.png" mode="aspectFit" class="phone_icon"></image>
+      <image src="/images/icon_phone.png" mode="aspectFit" class="phone_icon"></image>
       <view>客服电话：</view>
       <view bindtap="phoneCall">{{phoneNumber}}</view>
     </view>

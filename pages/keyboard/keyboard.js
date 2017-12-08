@@ -277,10 +277,8 @@ Page({
             //typeof copy === 'object'
             wx.hideLoading()
             var resData = res.data
-            console.log(resData)
             if (typeof resData === 'string') {
               resData = JSON.parse(resData)
-            } else {
             }
             if (resData.errorCode == 2) {
               //说明车牌号识别失败

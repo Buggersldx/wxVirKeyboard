@@ -80,6 +80,21 @@ Page({
               }
               
               var response = res.data.data;
+              if (!response || response.length == 0){
+                wx.showModal({
+                  title: "网络异常",
+                  content: "请重试",
+                  showCancel: false,
+                  success: function (res) {
+                    if (res.confirm) {
+                      self.setData({
+                        isPay: false
+                      })
+                    }
+                  }
+                })
+                return false
+              }
               // var nowTime = new Date()
               // var timeStamp = Math.round((nowTime.getTime()) / 1000)
               var timeStamp = response.timeStamp

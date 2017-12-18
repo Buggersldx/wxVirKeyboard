@@ -1,0 +1,14 @@
+{
+	"client": "./dist",
+	"svr": "",
+	"appid": "wx0aafe3defcbfc5d8",
+	"projectname": "%E9%BE%99%E9%97%A8%E5%81%9C%E8%BD%A6%E5%9C%BA",
+	"setting": {
+		"urlCheck": true,
+		"es6": false,
+		"postcss": false,
+		"minified": false,
+		"newFeature": true
+	},
+	"condition": {}
+}

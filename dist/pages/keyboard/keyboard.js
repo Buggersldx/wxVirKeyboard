@@ -171,9 +171,6 @@ Page({
    */
   tapSpecBtn: function (e) {
     var self = this;
-    if (self.data.flag) {
-      return false
-    }
     var btnIndex = e.target.dataset.index;
     if (btnIndex == 0) {
       //说明是完成事件
@@ -186,15 +183,12 @@ Page({
           duration: 2000
         })
       } else {
-        self.setData({
-          flag: true
-        })
         if (!checkNetWork.checkNetWorkStatu()) {
           console.log('网络错误')
-          self.setData({
-            flag: false
-          })
         } else {
+          wx.showLoading({
+            title: '提交中',
+          })
           wx.request({
             url: 'https://parkinglot.qqdayu.com/parking/get_charge_bill',
             method: 'post',
@@ -205,6 +199,7 @@ Page({
               'content-type': 'application/x-www-form-urlencoded'
             },
             success: function (res) {
+              wx.hideLoading()
               var response = res.data.data;
               if (res.data.errorCode == 0) {
                 //说明请求成功了,跳转到支付页面
@@ -226,9 +221,7 @@ Page({
               }
             },
             complete: function () {
-              self.setData({
-                flag: null
-              })
+              wx.hideLoading()
             }
           })
         }
@@ -266,7 +259,7 @@ Page({
         // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
         var tempFilePaths = res.tempFilePaths
         wx.showLoading({
-          title: '加载中',
+          title: '识别中',
         })
         wx.uploadFile({
           url: 'https://parkinglot.qqdayu.com/verify/verify',
@@ -274,9 +267,13 @@ Page({
           name: 'upload_file',
           formData: {},
           success: function (res) {
-            //typeof copy === 'object'
             wx.hideLoading()
-            var resData = res.data
+            if(res.statusCode === 500){
+              return false
+            }
+            //typeof copy === 'object'
+            var resData = res.data;
+            console.log(resData)
             if (typeof resData === 'string') {
               resData = JSON.parse(resData)
             }

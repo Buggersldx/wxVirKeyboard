@@ -74,8 +74,8 @@
     <view class="tel">{{telMessage}}</view>
     <view class="tel">
       <image src="/images/icon_phone.png" mode="aspectFit" class="phone_icon"></image>
-      <view>客服电话：</view>
-      <view bindtap="phoneCall">{{phoneNumber}}</view>
+      <text>客服电话：</text>
+      <text bindtap="phoneCall">{{phoneNumber}}</text>
     </view>
   </view>
 </view>

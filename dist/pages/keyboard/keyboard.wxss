@@ -23,7 +23,7 @@
   height: 58rpx;
 }
 
-.photo_icon{
+.photo_icon {
   display: block;
   position: relative;
   top: 140rpx;
@@ -116,7 +116,8 @@
   color: #fff;
   flex: 1 1 23%;
 }
-.td_spec_del{
+
+.td_spec_del {
   width: 50px;
   height: 50px;
 }
@@ -125,6 +126,7 @@
   box-shadow: 0 0 0 #e5e5e5;
   background: #e5e5e5;
 }
+
 .board_bg_spec {
   box-shadow: 0 0 0 #e5e5e5;
 }
@@ -133,6 +135,7 @@
   position: absolute;
   right: 20rpx;
   bottom: 100rpx;
+  z-index: 99;
 }
 
 .parking_icon {
@@ -169,13 +172,15 @@
 }
 
 .tel {
-  justify-content: center;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  width: 100%;
+  overflow: hidden;
+  text-align: center;
+  margin-bottom: 6rpx;
 }
 
 .phone_icon {
+  position: relative;
+  top: 2rpx;
   width: 22rpx;
   height: 22rpx;
   margin: 0 10rpx;

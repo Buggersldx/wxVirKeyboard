@@ -10,7 +10,6 @@ Page({
     carNum: '',
     payMoney: '',
     phoneNumber: '',
-    isPay: false,
     userInfo: {},
     feeScale1:'9座以下（不含9座）车辆收费10元/次',
     feeScale2:'20座以上（不含20座）收费20元/次'
@@ -20,20 +19,15 @@ Page({
    */
   recharge: function () {
     var self = this;
-    if (self.data.isPay) {
-      return false
-    }
-    self.setData({
-      isPay: true
-    })
     wx.login({
       success: function (res) {
         if (!checkNetWork.checkNetWorkStatu()) {
           console.log('网络错误')
-          self.setData({
-            isPay: null
-          })
         } else {
+          wx.showLoading({
+            title: '支付中',
+            mask: true
+        });
           wx.request({
             url: 'https://parkinglot.qqdayu.com/parking/get_code',
             method: 'post',
@@ -46,6 +40,8 @@ Page({
               'content-type': 'application/x-www-form-urlencoded'
             },
             success: function (res) {
+              wx.hideLoading();
+
               if (res.data.errorCode == 2){
                 //说明多人并发支付
                 wx.showModal({
@@ -54,14 +50,12 @@ Page({
                   showCancel: false,
                   success: function (res) {
                     if (res.confirm) {
-                      self.setData({
-                        isPay: false
-                      })
                     }
                   }
                 })
                 return false;
               }
+
               if (res.data.errorCode == 1) {
                 //说明支付错误
                 wx.showModal({
@@ -70,9 +64,6 @@ Page({
                   showCancel: false,
                   success: function (res) {
                     if (res.confirm) {
-                      self.setData({
-                        isPay: false
-                      })
                     }
                   }
                 })
@@ -87,16 +78,12 @@ Page({
                   showCancel: false,
                   success: function (res) {
                     if (res.confirm) {
-                      self.setData({
-                        isPay: false
-                      })
                     }
                   }
                 })
                 return false
               }
-              // var nowTime = new Date()
-              // var timeStamp = Math.round((nowTime.getTime()) / 1000)
+
               var timeStamp = response.timeStamp
               var nonceStr = response.nonceStr
               var prepay_id = response.package
@@ -120,7 +107,6 @@ Page({
                 },
                 fail: function (res) {
                   //fail (detail message)	调用支付失败，其中 detail message 为后台返回的详细失败原因
-                  console.log(res)
                   wx.showToast({
                     title: '支付取消',
                     icon: 'success',
@@ -129,24 +115,16 @@ Page({
                   })
                 },
                 complete: function () {
-                  self.setData({
-                    isPay: null
-                  })
                 }
               })
             },
             fail: function () {
-              self.setData({
-                isPay: null
-              })
+              wx.hideLoading();
             }
           })
         }
       },
       fail:function(){
-        self.setData({
-          isPay: null
-        })
       }
     });
   },
@@ -226,15 +204,5 @@ Page({
    */
   onReachBottom: function () {
 
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-    return {
-      desc: '我刚刚发现了一个停车场,分享给大家看看吧', // 分享描述
-      path: 'pages/keyboard/keyboard' // 分享路径
-    }
   }
 })

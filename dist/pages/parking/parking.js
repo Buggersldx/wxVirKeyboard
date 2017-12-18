@@ -111,7 +111,7 @@ Page({
    */
   onShareAppMessage: function () {
     return {
-      desc: '我刚刚发现了一个停车场,分享给大家看看吧', // 分享描述
+      title: '我刚刚发现了一个龙门停车场,分享给大家看看吧', // 分享描述
       path: 'pages/keyboard/keyboard' // 分享路径
     }
   }

@@ -40,7 +40,7 @@ Page({
             return false;
         } else {
             wx.request({
-                url: 'https://parkinglot.qqdayu.com/parking/home',
+                url: '',
                 data: {
                     textValue: self.data.textValue
                 },
@@ -193,7 +193,7 @@ Page({
                     });
                     wx.request({
                         url:
-                            'https://parkinglot.qqdayu.com/parking/get_charge_bill',
+                            '',
                         method: 'post',
                         data: {
                             plateNo: self.data.textValue
@@ -276,7 +276,7 @@ Page({
                     mask: true
                 });
                 wx.uploadFile({
-                    url: 'https://parkinglot.qqdayu.com/verify/verify',
+                    url: '',
                     filePath: tempFilePaths[0],
                     name: 'upload_file',
                     formData: {},

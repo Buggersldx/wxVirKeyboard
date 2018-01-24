@@ -29,7 +29,7 @@ Page({
             mask: true
         });
           wx.request({
-            url: 'https://parkinglot.qqdayu.com/parking/get_code',
+            url: '',
             method: 'post',
             data: {
               code: res.code,

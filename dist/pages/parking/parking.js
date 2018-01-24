@@ -21,7 +21,7 @@ Page({
       console.log('网络错误')
     } else {
       wx.request({
-        url: 'https://parkinglot.qqdayu.com/parking/get_plat_park_info',
+        url: '',
         method: 'post',
         data: {},
         header: {
@@ -76,7 +76,7 @@ Page({
       console.log('网络错误')
     } else {
       wx.request({
-        url: 'https://parkinglot.qqdayu.com/parking/get_plat_park_info',
+        url: '',
         method: 'post',
         data: {},
         header: {
